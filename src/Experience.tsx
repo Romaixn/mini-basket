@@ -1,7 +1,12 @@
-import { PresentationControls, Center } from "@react-three/drei"
+import { Suspense, useRef } from "react"
+import { useFrame } from "@react-three/fiber"
+import { PresentationControls, Center, Environment } from "@react-three/drei"
+import { Physics } from '@react-three/rapier'
+import { easing } from 'maath'
 import { Perf } from "r3f-perf"
 import { useControls } from 'leva'
 import Lights from "./Lights"
+import Level from "./Level"
 
 export default function Experience() {
     const { perfVisible } = useControls('debug', {
@@ -12,6 +17,7 @@ export default function Experience() {
         <color attach="background" args={["#ddc28d"]} />
         { perfVisible && <Perf position="top-left" /> }
 
+        <Environment preset="city" />
         <Lights />
 
         <PresentationControls
@@ -21,12 +27,36 @@ export default function Experience() {
             polar={[0, Math.PI / 4]}
             azimuth={[-Math.PI / 4, Math.PI / 4]}
         >
-            <Center>
-                <mesh>
-                    <boxGeometry />
-                    <meshStandardMaterial color="hotpink" />
-                </mesh>
-            </Center>
+            <group>
+                <Suspense fallback={<Fallback />}>
+                    <Center>
+                        <Physics>
+                            <Level />
+                        </Physics>
+                    </Center>
+                    <Zoom />
+                </Suspense>
+            </group>
         </PresentationControls>
     </>
+}
+
+
+const Fallback: React.FC = () => {
+    const ref = useRef()
+    useFrame((state) => (ref.current.position.x = Math.sin(state.clock.elapsedTime * 2)))
+
+    return (
+        <mesh ref={ref}>
+            <sphereGeometry args={[0.15, 64, 64]} />
+            <meshBasicMaterial color="#556" />
+        </mesh>
+    )
+}
+
+const Zoom: React.FC = () => {
+    useFrame((state, delta) => {
+    easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
+        state.camera.lookAt(0, 0, 0)
+    })
 }
