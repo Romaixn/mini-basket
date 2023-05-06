@@ -1,4 +1,5 @@
 import { Suspense, useRef } from "react"
+import { Mesh } from 'three'
 import { useFrame } from "@react-three/fiber"
 import { PresentationControls, Center, Environment } from "@react-three/drei"
 import { Physics } from '@react-three/rapier'
@@ -43,7 +44,7 @@ export default function Experience() {
 
 
 const Fallback: React.FC = () => {
-    const ref = useRef()
+    const ref = useRef<Mesh>(null!)
     useFrame((state) => (ref.current.position.x = Math.sin(state.clock.elapsedTime * 2)))
 
     return (
@@ -59,4 +60,6 @@ const Zoom: React.FC = () => {
     easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
         state.camera.lookAt(0, 0, 0)
     })
+
+    return <></>
 }
