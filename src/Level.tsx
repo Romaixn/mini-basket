@@ -1,13 +1,11 @@
-import { RoundedBox, MeshTransmissionMaterial } from "@react-three/drei"
 import Ball from "./Components/Ball"
 import Table from "./Components/Table"
 
-export default function Level() {
+const Level: React.FC = () => {
     return <>
-        <Ball position={{ x: 0, y: 1, z: 1 }} />
+        <Ball position={{ x: 0, y: 1.5, z: 0 }} />
         <Table />
-        <RoundedBox scale={[2, 2, 3]} castShadow position={[0, 0.87, 0]}>
-            <MeshTransmissionMaterial anisotropy={0.1} chromaticAberration={0.04} distortionScale={0} temporalDistortion={0} />
-        </RoundedBox>
     </>
 }
+
+export default Level

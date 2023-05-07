@@ -9,7 +9,7 @@ import { useControls } from 'leva'
 import Lights from "./Lights"
 import Level from "./Level"
 
-export default function Experience() {
+const Experience: React.FC = () => {
     const { perfVisible } = useControls('debug', {
         perfVisible: false,
     })
@@ -63,3 +63,5 @@ const Zoom: React.FC = () => {
 
     return <></>
 }
+
+export default Experience

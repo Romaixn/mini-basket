@@ -1,4 +1,4 @@
-export default function Lights() {
+const Lights: React.FC = () => {
     return <>
         <directionalLight
             castShadow
@@ -9,3 +9,5 @@ export default function Lights() {
         <ambientLight intensity={0.5} />
     </>
 }
+
+export default Lights
