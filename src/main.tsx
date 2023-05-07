@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Leva hidden={!debug} />
     <Canvas
         dpr={[1, 2]}
-        camera={{ position: [-10, 15, 15], fov: 30 }}
+        camera={{ position: [-10, 15, 15], fov: 45 }}
     >
         <Experience />
     </Canvas>
