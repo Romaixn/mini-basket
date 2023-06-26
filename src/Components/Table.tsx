@@ -7,6 +7,9 @@ type GLTFResult = GLTF & {
   nodes: {
     Table: THREE.Mesh;
     Glass: THREE.Mesh;
+    Controls: THREE.Mesh;
+    Control_A: THREE.Mesh;
+    Control_B: THREE.Mesh;
   };
   materials: {
     Wood: THREE.MeshStandardMaterial;
@@ -32,6 +35,29 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
             >
                 <MeshTransmissionMaterial anisotropy={0.1} chromaticAberration={0.04} distortionScale={0} temporalDistortion={0} />
         </mesh>
+        <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Controls.geometry}
+        material={materials.Wood}
+        position={[4.183, 0.092, -0.003]}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Control_A.geometry}
+        material={materials.Wood}
+        position={[4.311, 0, 0.688]}
+        rotation={[0, 0, -0.262]}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Control_B.geometry}
+        material={materials.Wood}
+        position={[4.311, 0, -0.811]}
+        rotation={[0, 0, -0.262]}
+      />
     </group>
   );
 }
