@@ -3,6 +3,11 @@
 }
 
 html,
+body {
+    background-color: #ddc28d;
+}
+
+html,
 body,
 #root,
 #main {

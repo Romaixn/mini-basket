@@ -23,10 +23,10 @@ const Experience: React.FC = () => {
 
         <PresentationControls
             global
-            zoom={0.8}
-            rotation={[0, -Math.PI / 4, 0]}
-            polar={[0, Math.PI / 4]}
-            azimuth={[-Math.PI / 4, Math.PI / 4]}
+            cursor={false}
+            zoom={2}
+            rotation={[0, -Math.PI / 8, 0]}
+            azimuth={[-Math.PI / 2, Math.PI / 2]}
         >
             <group>
                 <Suspense fallback={<Fallback />}>
