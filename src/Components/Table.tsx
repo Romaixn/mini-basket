@@ -10,12 +10,15 @@ type GLTFResult = GLTF & {
     Controls: THREE.Mesh;
     Control_A: THREE.Mesh;
     Control_B: THREE.Mesh;
+    Propulsor_A: THREE.Mesh;
+    Propulsor_B: THREE.Mesh;
   };
   materials: {
     Wood: THREE.MeshStandardMaterial;
     Red: THREE.MeshStandardMaterial;
     Green: THREE.MeshStandardMaterial;
     Glass: THREE.MeshStandardMaterial;
+    Black: THREE.MeshStandardMaterial;
   };
 };
 
@@ -60,6 +63,22 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
         material={materials.Green}
         position={[4.311, -0.119, -0.811]}
         rotation={[0, 0, -0.39]}
+      />
+            <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Propulsor_B.geometry}
+        material={materials.Black}
+        position={[2.259, -0.11, -0.764]}
+        scale={0.573}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes.Propulsor_A.geometry}
+        material={materials.Black}
+        position={[2.259, -0.11, 0.765]}
+        scale={0.573}
       />
     </group>
   );
