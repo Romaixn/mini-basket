@@ -10,8 +10,9 @@ import Lights from "./Lights"
 import Level from "./Level"
 
 const Experience: React.FC = () => {
-    const { perfVisible } = useControls('debug', {
+    const { perfVisible, debugPhysics } = useControls('debug', {
         perfVisible: false,
+        debugPhysics: false,
     })
 
     return <>
@@ -24,17 +25,16 @@ const Experience: React.FC = () => {
         <PresentationControls
             global
             cursor={false}
-            zoom={2}
-            rotation={[0, -Math.PI / 8, 0]}
+            // rotation={[0, -Math.PI / 8, 0]}
             azimuth={[-Math.PI / 2, Math.PI / 2]}
         >
             <group>
                 <Suspense fallback={<Fallback />}>
-                    <Center>
-                        <Physics>
-                            <Level />
+                        <Physics debug={debugPhysics}>
+                            <Center>
+                                <Level />
+                            </Center>
                         </Physics>
-                    </Center>
                     <Zoom />
                 </Suspense>
             </group>
