@@ -6,7 +6,7 @@ const Lights: React.FC = () => {
             intensity={ 1.5 }
         />
 
-        <ambientLight intensity={0.5} />
+        <ambientLight />
     </>
 }
 

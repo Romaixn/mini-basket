@@ -5,6 +5,7 @@ import { MeshTransmissionMaterial } from "@react-three/drei"
 import { RapierRigidBody, RigidBody, vec3 } from '@react-three/rapier'
 import { RefObject, useEffect, useRef } from "react";
 import { useControlsStore } from '../stores/useGame'
+import { useControls } from "leva";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -31,6 +32,13 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
     const controlB = useRef<THREE.Mesh>(null)
     const thrusterA = useRef<RapierRigidBody>(null)
     const thrusterB = useRef<RapierRigidBody>(null)
+
+    const { tableRestitution, tableFriction, glassRestitution, glassFriction } = useControls('table', {
+        tableRestitution: { label: 'Table Restitution', value: 0.6, min: 0, max: 1, step: 0.1 },
+        tableFriction: { label: 'Table Friction', value: 0, min: 0, max: 10 },
+        glassRestitution: { label: 'Glass Restitution', value: 0.2, min: 0, max: 1, step: 0.1 },
+        glassFriction: { label: 'Glass Friction', value: 0, min: 0, max: 10 },
+    })
 
     const clickUp = (control: RefObject<THREE.Mesh>) => {
         if (control.current) {
@@ -96,16 +104,18 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
 
     return (
         <group {...props} dispose={null} rotation={[0, -Math.PI / 2, 0]}>
-            <RigidBody type="fixed" colliders="trimesh">
+            <RigidBody type="fixed" colliders="trimesh" restitution={tableRestitution} friction={tableFriction}>
                 <mesh
                     castShadow
                     receiveShadow
                     geometry={nodes.Table.geometry}
                     material={materials.Wood}
+                    material-color="#DEB887"
+                    material-envMapIntensity={0.5}
                     position={[0, 0.07, 0]}
                 />
             </RigidBody>
-            <RigidBody type="fixed" colliders="trimesh">
+            <RigidBody type="fixed" colliders="trimesh" restitution={glassRestitution} friction={glassFriction}>
                 <mesh
                     castShadow
                     receiveShadow
@@ -146,6 +156,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 ref={thrusterA}
                 type="kinematicPosition"
                 colliders="trimesh"
+                friction={10}
             >
                 <mesh
                     castShadow
@@ -159,6 +170,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 ref={thrusterB}
                 type="kinematicPosition"
                 colliders="trimesh"
+                friction={10}
             >
                 <mesh
                     castShadow
