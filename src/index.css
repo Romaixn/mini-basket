@@ -19,6 +19,6 @@ body,
     user-select: none;
 }
 
-canvas {
+div {
     touch-action: none;
 }

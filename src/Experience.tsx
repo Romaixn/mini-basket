@@ -11,8 +11,8 @@ import Level from "./Level"
 
 const Experience: React.FC = () => {
     const { perfVisible, debugPhysics } = useControls('debug', {
-        perfVisible: true,
-        debugPhysics: true,
+        perfVisible: false,
+        debugPhysics: false,
     })
 
     return <>
@@ -25,16 +25,16 @@ const Experience: React.FC = () => {
         <PresentationControls
             global
             cursor={false}
-            rotation={[0, -Math.PI / 8, 0]}
+            // rotation={[0, -Math.PI / 8, 0]}
             azimuth={[-Math.PI / 2, Math.PI / 2]}
         >
             <group>
                 <Suspense fallback={<Fallback />}>
-                    <Center>
                         <Physics debug={debugPhysics}>
-                            <Level />
+                            <Center>
+                                <Level />
+                            </Center>
                         </Physics>
-                    </Center>
                     <Zoom />
                 </Suspense>
             </group>
