@@ -38,7 +38,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
         tableFriction: { label: 'Table Friction', value: 0, min: 0, max: 10 },
         glassRestitution: { label: 'Glass Restitution', value: 0.2, min: 0, max: 1, step: 0.1 },
         glassFriction: { label: 'Glass Friction', value: 0, min: 0, max: 10 },
-    })
+    }, { collapsed: true })
 
     const clickUp = (control: RefObject<THREE.Mesh>) => {
         if (control.current) {
@@ -130,7 +130,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 receiveShadow
                 geometry={nodes.Controls.geometry}
                 material={materials.Wood}
-                position={[4.183, 0.092, -0.003]}
+                position={[4.135, 0.092, -0.003]}
             />
             <mesh
                 ref={controlA}
@@ -138,7 +138,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 receiveShadow
                 geometry={nodes.Control_A.geometry}
                 material={materials.Red}
-                position={[4.311, -0.117, 0.688]}
+                position={[4.264, -0.117, 0.688]}
                 onPointerUp={() => clickUp(controlA)}
                 onPointerDown={() => clickDown(controlA)}
             />
@@ -148,7 +148,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 receiveShadow
                 geometry={nodes.Control_B.geometry}
                 material={materials.Green}
-                position={[4.311, -0.117, -0.811]}
+                position={[4.264, -0.119, -0.811]}
                 onPointerUp={() => clickUp(controlB)}
                 onPointerDown={() => clickDown(controlB)}
             />

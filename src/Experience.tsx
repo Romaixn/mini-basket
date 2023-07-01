@@ -11,8 +11,8 @@ import Level from "./Level"
 
 const Experience: React.FC = () => {
     const { perfVisible, debugPhysics } = useControls('debug', {
-        perfVisible: false,
-        debugPhysics: false,
+        perfVisible: { label: 'Performance', value: false },
+        debugPhysics: { label: 'Physics', value: false },
     })
 
     return <>

@@ -27,7 +27,7 @@ const Ball: React.FC<BallProps> = ({ position }) => {
     const { ballRestitution, ballFriction } = useControls('ball', {
         ballRestitution: { label: 'Restitution', value: 1, min: 0, max: 10 },
         ballFriction: { label: 'Friction', value: 0.2, min: 0, max: 10 },
-    })
+    }, { collapsed: true })
 
     const { nodes, materials } = useGLTF("/models/basketball.glb") as GLTFResult;
     return (
