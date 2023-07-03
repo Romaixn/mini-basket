@@ -177,8 +177,9 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
             <RigidBody
                 ref={thrusterA}
                 type="kinematicPosition"
-                colliders="trimesh"
-                friction={10}
+                colliders="hull"
+                lockRotations={true}
+                enabledTranslations={[false, true, false]}
             >
                 <mesh
                     castShadow
@@ -191,8 +192,9 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
             <RigidBody
                 ref={thrusterB}
                 type="kinematicPosition"
-                colliders="trimesh"
-                friction={10}
+                colliders="hull"
+                lockRotations={true}
+                enabledTranslations={[false, true, false]}
             >
                 <mesh
                     castShadow
@@ -202,15 +204,13 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     position={[2.259, -0.189, -0.764]}
                 />
             </RigidBody>
-            <RigidBody type="fixed" friction={999} colliders="cuboid">
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Hide_Thruster.geometry}
-                    material={materials.Black}
-                    position={[2.257, -0.047, 0]}
-                />
-            </RigidBody>
+            <mesh
+                castShadow
+                receiveShadow
+                geometry={nodes.Hide_Thruster.geometry}
+                material={materials.Black}
+                position={[2.257, -0.047, 0]}
+            />
         </group>
     );
 }

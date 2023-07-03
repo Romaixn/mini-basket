@@ -43,14 +43,14 @@ const Ball: React.FC<BallProps> = ({ position }) => {
     useFrame(() => {
         const ballPosition = ball.current?.translation()
 
-        if(ballPosition && ballPosition.y < - 4) {
+        if(ballPosition && (ballPosition.y < - 4 || ballPosition.y > 4)) {
             reset()
         }
     })
 
     const { nodes, materials } = useGLTF("/models/basketball.glb") as GLTFResult;
     return (
-        <group position={[position.x, position.y, position.z]} scale={0.5} dispose={null}>
+        <group position={[position.x, position.y, position.z]} scale={0.6} dispose={null}>
             <RigidBody ref={ball} colliders="ball" restitution={ballRestitution} friction={ballFriction}>
                 <mesh
                     castShadow
