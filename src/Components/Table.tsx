@@ -13,9 +13,12 @@ type GLTFResult = GLTF & {
         Glass: THREE.Mesh;
         Controls: THREE.Mesh;
         Control_A: THREE.Mesh;
+        Control_A_Text: THREE.Mesh;
         Control_B: THREE.Mesh;
+        Control_B_Text: THREE.Mesh;
         Thruster_A: THREE.Mesh;
         Thruster_B: THREE.Mesh;
+        Hide_Thruster: THREE.Mesh;
     };
     materials: {
         Wood: THREE.MeshStandardMaterial;
@@ -23,6 +26,7 @@ type GLTFResult = GLTF & {
         Green: THREE.MeshStandardMaterial;
         Glass: THREE.MeshStandardMaterial;
         Black: THREE.MeshStandardMaterial;
+        White: THREE.MeshStandardMaterial;
     };
 };
 
@@ -48,7 +52,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 useControlsStore.setState({isControlBPushed: false})
             }
 
-            control.current.position.y = -0.117
+            control.current.position.y = 0.128
         }
     }
 
@@ -60,12 +64,12 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 useControlsStore.setState({isControlBPushed: true})
             }
 
-            control.current.position.y = -0.117 - 0.1
+            control.current.position.y = 0.128 - 0.1
         }
     }
 
     useEffect(() => {
-        const upY = 0.3
+        const upY = 0.5
 
         const unsuscribeA = useControlsStore.subscribe(
             (state) => state.isControlAPushed,
@@ -138,20 +142,38 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 receiveShadow
                 geometry={nodes.Control_A.geometry}
                 material={materials.Red}
-                position={[4.264, -0.117, 0.688]}
+                position={[4.184, 0.128, 0.744]}
                 onPointerUp={() => clickUp(controlA)}
                 onPointerDown={() => clickDown(controlA)}
-            />
+            >
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Control_A_Text.geometry}
+                    material={materials.White}
+                    position={[0.237, 0.046, 0.21]}
+                    rotation={[Math.PI / 2, 1.179, -Math.PI / 2]}
+                />
+            </mesh>
             <mesh
                 ref={controlB}
                 castShadow
                 receiveShadow
                 geometry={nodes.Control_B.geometry}
                 material={materials.Green}
-                position={[4.264, -0.119, -0.811]}
+                position={[4.183, 0.128, -0.754]}
                 onPointerUp={() => clickUp(controlB)}
                 onPointerDown={() => clickDown(controlB)}
-            />
+            >
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Control_B_Text.geometry}
+                    material={materials.White}
+                    position={[0.25, 0.043, 0.207]}
+                    rotation={[Math.PI / 2, 1.184, -Math.PI / 2]}
+                />
+            </mesh>
             <RigidBody
                 ref={thrusterA}
                 type="kinematicPosition"
@@ -163,7 +185,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     receiveShadow
                     geometry={nodes.Thruster_A.geometry}
                     material={materials.Black}
-                    position={[2.259, -0.11, 0.765]}
+                    position={[2.259, -0.189, 0.765]}
                 />
             </RigidBody>
             <RigidBody
@@ -177,7 +199,16 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     receiveShadow
                     geometry={nodes.Thruster_B.geometry}
                     material={materials.Black}
-                    position={[2.259, -0.11, -0.764]}
+                    position={[2.259, -0.189, -0.764]}
+                />
+            </RigidBody>
+            <RigidBody type="fixed" friction={999} colliders="cuboid">
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Hide_Thruster.geometry}
+                    material={materials.Black}
+                    position={[2.257, -0.047, 0]}
                 />
             </RigidBody>
         </group>
