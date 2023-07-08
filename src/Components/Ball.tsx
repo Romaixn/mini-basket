@@ -51,7 +51,7 @@ const Ball: React.FC<BallProps> = ({ position }) => {
     const { nodes, materials } = useGLTF("/models/basketball.glb") as GLTFResult;
     return (
         <group position={[position.x, position.y, position.z]} scale={0.7} dispose={null}>
-            <RigidBody ref={ball} colliders="ball" restitution={ballRestitution} friction={ballFriction} gravityScale={3}>
+            <RigidBody ref={ball} colliders="ball" restitution={ballRestitution} friction={ballFriction} gravityScale={3.5}>
                 <mesh
                     castShadow
                     receiveShadow

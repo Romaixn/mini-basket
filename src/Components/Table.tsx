@@ -19,6 +19,10 @@ type GLTFResult = GLTF & {
         Thruster_A: THREE.Mesh;
         Thruster_B: THREE.Mesh;
         Hide_Thruster: THREE.Mesh;
+        Base: THREE.Mesh;
+        Cylinder: THREE.Mesh;
+        Panel: THREE.Mesh;
+        Ring: THREE.Mesh;
     };
     materials: {
         Wood: THREE.MeshStandardMaterial;
@@ -124,7 +128,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     castShadow
                     receiveShadow
                     geometry={nodes.Glass.geometry}
-                    position={[0, 0.86, 0]}
+                    position={[0.497, 1.54, 0.005]}
                     >
                         <MeshTransmissionMaterial anisotropy={0.1} chromaticAberration={0.04} distortionScale={0} temporalDistortion={0} />
                 </mesh>
@@ -211,6 +215,36 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 material={materials.Black}
                 position={[2.257, -0.047, 0]}
             />
+            <RigidBody type="fixed" colliders="trimesh">
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Base.geometry}
+                    material={materials.Wood}
+                    position={[-2.235, 0.565, 0]}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Cylinder.geometry}
+                    material={materials.Red}
+                    position={[-2.235, 1.177, 0]}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Panel.geometry}
+                    material={materials.Wood}
+                    position={[-2.234, 1.814, 0]}
+                />
+                <mesh
+                    castShadow
+                    receiveShadow
+                    geometry={nodes.Ring.geometry}
+                    material={materials.Red}
+                    position={[-1.686, 1.46, 0]}
+                />
+            </RigidBody>
         </group>
     );
 }
