@@ -1,11 +1,11 @@
 import * as THREE from "three";
-import { useGLTF } from "@react-three/drei";
-import { GLTF } from "three-stdlib";
-import { MeshTransmissionMaterial } from "@react-three/drei"
-import { RapierRigidBody, RigidBody, vec3 } from '@react-three/rapier'
-import { RefObject, useEffect, useRef } from "react";
-import { useControlsStore } from '../stores/useGame'
-import { useControls } from "leva";
+import {useGLTF} from "@react-three/drei";
+import {GLTF} from "three-stdlib";
+import {MeshTransmissionMaterial} from "@react-three/drei"
+import {CuboidCollider, RapierRigidBody, RigidBody, vec3} from '@react-three/rapier'
+import {RefObject, useEffect, useRef, useState} from "react";
+import {useControlsStore, useScoreStore} from '../stores/useGame'
+import {useControls} from "leva";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -35,22 +35,33 @@ type GLTFResult = GLTF & {
 };
 
 export default function Table(props: JSX.IntrinsicElements["group"]) {
-    const { nodes, materials } = useGLTF("/models/table.gltf") as GLTFResult;
+    const {nodes, materials} = useGLTF("/models/table.gltf") as GLTFResult;
     const controlA = useRef<THREE.Mesh>(null)
     const controlB = useRef<THREE.Mesh>(null)
     const thrusterA = useRef<RapierRigidBody>(null)
     const thrusterB = useRef<RapierRigidBody>(null)
 
-    const { tableRestitution, tableFriction, glassRestitution, glassFriction } = useControls('table', {
-        tableRestitution: { label: 'Table Restitution', value: 0.6, min: 0, max: 1, step: 0.1 },
-        tableFriction: { label: 'Table Friction', value: 0, min: 0, max: 10 },
-        glassRestitution: { label: 'Glass Restitution', value: 0.2, min: 0, max: 1, step: 0.1 },
-        glassFriction: { label: 'Glass Friction', value: 0, min: 0, max: 10 },
-    }, { collapsed: true })
+    const [isScored, setIsScored] = useState(false)
+
+    const {tableRestitution, tableFriction, glassRestitution, glassFriction} = useControls('table', {
+        tableRestitution: {label: 'Table Restitution', value: 0.6, min: 0, max: 1, step: 0.1},
+        tableFriction: {label: 'Table Friction', value: 0, min: 0, max: 10},
+        glassRestitution: {label: 'Glass Restitution', value: 0.2, min: 0, max: 1, step: 0.1},
+        glassFriction: {label: 'Glass Friction', value: 0, min: 0, max: 10},
+    }, {collapsed: true})
+
+    const increaseScore = useScoreStore((state) => state.increment)
+
+    const goal = () => {
+        if(!isScored) {
+            setIsScored(true)
+            increaseScore()
+        }
+    }
 
     const clickUp = (control: RefObject<THREE.Mesh>) => {
         if (control.current) {
-            if(control === controlA) {
+            if (control === controlA) {
                 useControlsStore.setState({isControlAPushed: false})
             } else {
                 useControlsStore.setState({isControlBPushed: false})
@@ -62,7 +73,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
 
     const clickDown = (control: RefObject<THREE.Mesh>) => {
         if (control.current) {
-            if(control === controlA) {
+            if (control === controlA) {
                 useControlsStore.setState({isControlAPushed: true})
             } else {
                 useControlsStore.setState({isControlBPushed: true})
@@ -82,9 +93,17 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     const position = vec3(thrusterA.current.translation())
 
                     if (isControlAPushed) {
-                        thrusterA.current.setNextKinematicTranslation({x: position.x, y: position.y + upY, z: position.z})
+                        thrusterA.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y + upY,
+                            z: position.z
+                        })
                     } else {
-                        thrusterA.current.setNextKinematicTranslation({x: position.x, y: position.y - upY, z: position.z})
+                        thrusterA.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y - upY,
+                            z: position.z
+                        })
                     }
                 }
             }
@@ -96,9 +115,17 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                 if (thrusterB.current) {
                     const position = vec3(thrusterB.current.translation())
                     if (isControlBPushed) {
-                        thrusterB.current.setNextKinematicTranslation({x: position.x, y: position.y + upY, z: position.z})
+                        thrusterB.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y + upY,
+                            z: position.z
+                        })
                     } else {
-                        thrusterB.current.setNextKinematicTranslation({x: position.x, y: position.y - upY, z: position.z})
+                        thrusterB.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y - upY,
+                            z: position.z
+                        })
                     }
                 }
             }
@@ -122,6 +149,15 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     material-envMapIntensity={0.5}
                     position={[0, 0.07, 0]}
                 />
+
+                <CuboidCollider
+                    args={[0, 2, 1.5]}
+                    position={[1.5, 1.5, 0]}
+                    sensor
+                    onIntersectionExit={() => {
+                        setIsScored(false)
+                    }}
+                />
             </RigidBody>
             <RigidBody type="fixed" colliders="trimesh" restitution={glassRestitution} friction={glassFriction}>
                 <mesh
@@ -129,8 +165,9 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     receiveShadow
                     geometry={nodes.Glass.geometry}
                     position={[0.497, 1.54, 0.005]}
-                    >
-                        <MeshTransmissionMaterial anisotropy={0.1} chromaticAberration={0.04} distortionScale={0} temporalDistortion={0} />
+                >
+                    <MeshTransmissionMaterial anisotropy={0.1} chromaticAberration={0.04} distortionScale={0}
+                                              temporalDistortion={0}/>
                 </mesh>
             </RigidBody>
             <mesh
@@ -237,13 +274,20 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     material={materials.Wood}
                     position={[-2.234, 1.814, 0]}
                 />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Ring.geometry}
-                    material={materials.Red}
-                    position={[-1.686, 1.46, 0]}
-                />
+                <CuboidCollider
+                    args={[0.35, 0, 0.35]}
+                    position={[-1.686, 1.40, 0]}
+                    sensor
+                    onIntersectionExit={goal}
+                >
+                    <mesh
+                        castShadow
+                        receiveShadow
+                        position={[0, 0.06, 0]}
+                        geometry={nodes.Ring.geometry}
+                        material={materials.Red}
+                    />
+                </CuboidCollider>
             </RigidBody>
         </group>
     );
