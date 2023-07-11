@@ -1,11 +1,11 @@
 import * as THREE from "three";
-import {useGLTF} from "@react-three/drei";
-import {GLTF} from "three-stdlib";
-import {MeshTransmissionMaterial} from "@react-three/drei"
-import {CuboidCollider, RapierRigidBody, RigidBody, vec3} from '@react-three/rapier'
-import {RefObject, useEffect, useRef, useState} from "react";
-import {useControlsStore, useScoreStore} from '../stores/useGame'
-import {useControls} from "leva";
+import { useGLTF } from "@react-three/drei";
+import { GLTF } from "three-stdlib";
+import { MeshTransmissionMaterial } from "@react-three/drei";
+import { CuboidCollider, RapierRigidBody, RigidBody, vec3 } from '@react-three/rapier';
+import { RefObject, useEffect, useRef, useState } from "react";
+import { setConfetti } from '../stores/useGame';
+import { useControls } from "leva";
 
 type GLTFResult = GLTF & {
     nodes: {
@@ -35,107 +35,108 @@ type GLTFResult = GLTF & {
 };
 
 export default function Table(props: JSX.IntrinsicElements["group"]) {
-    const {nodes, materials} = useGLTF("/models/table.gltf") as GLTFResult;
-    const controlA = useRef<THREE.Mesh>(null)
-    const controlB = useRef<THREE.Mesh>(null)
-    const thrusterA = useRef<RapierRigidBody>(null)
-    const thrusterB = useRef<RapierRigidBody>(null)
+    const { nodes, materials } = useGLTF("/models/table.gltf") as GLTFResult;
+    const controlA = useRef<THREE.Mesh>(null);
+    const controlB = useRef<THREE.Mesh>(null);
+    const thrusterA = useRef<RapierRigidBody>(null);
+    const thrusterB = useRef<RapierRigidBody>(null);
 
-    const [isScored, setIsScored] = useState(false)
+    const [isScored, setIsScored] = useState(false);
 
-    const {tableRestitution, tableFriction, glassRestitution, glassFriction} = useControls('table', {
-        tableRestitution: {label: 'Table Restitution', value: 0.6, min: 0, max: 1, step: 0.1},
-        tableFriction: {label: 'Table Friction', value: 0, min: 0, max: 10},
-        glassRestitution: {label: 'Glass Restitution', value: 0.2, min: 0, max: 1, step: 0.1},
-        glassFriction: {label: 'Glass Friction', value: 0, min: 0, max: 10},
-    }, {collapsed: true})
+    const { tableRestitution, tableFriction, glassRestitution, glassFriction } = useControls('table', {
+        tableRestitution: { label: 'Table Restitution', value: 0.6, min: 0, max: 1, step: 0.1 },
+        tableFriction: { label: 'Table Friction', value: 0, min: 0, max: 10 },
+        glassRestitution: { label: 'Glass Restitution', value: 0.2, min: 0, max: 1, step: 0.1 },
+        glassFriction: { label: 'Glass Friction', value: 0, min: 0, max: 10 },
+    }, { collapsed: true });
 
-    const increaseScore = useScoreStore((state) => state.increment)
+    const increaseScore = useScoreStore((state) => state.increment);
 
     const goal = () => {
-        if(!isScored) {
-            setIsScored(true)
-            increaseScore()
+        if (!isScored) {
+            setIsScored(true);
+            increaseScore();
+            setConfetti(true);
         }
-    }
+    };
 
     const clickUp = (control: RefObject<THREE.Mesh>) => {
         if (control.current) {
             if (control === controlA) {
-                useControlsStore.setState({isControlAPushed: false})
+                useControlsStore.setState({ isControlAPushed: false });
             } else {
-                useControlsStore.setState({isControlBPushed: false})
+                useControlsStore.setState({ isControlBPushed: false });
             }
 
-            control.current.position.y = 0.128
+            control.current.position.y = 0.128;
         }
-    }
+    };
 
     const clickDown = (control: RefObject<THREE.Mesh>) => {
         if (control.current) {
             if (control === controlA) {
-                useControlsStore.setState({isControlAPushed: true})
+                useControlsStore.setState({ isControlAPushed: true });
             } else {
-                useControlsStore.setState({isControlBPushed: true})
+                useControlsStore.setState({ isControlBPushed: true });
             }
 
-            control.current.position.y = 0.128 - 0.1
+            control.current.position.y = 0.128 - 0.1;
         }
-    }
+    };
 
     useEffect(() => {
-        const upY = 0.5
+        const upY = 0.5;
 
         const unsuscribeA = useControlsStore.subscribe(
             (state) => state.isControlAPushed,
             (isControlAPushed) => {
                 if (thrusterA.current) {
-                    const position = vec3(thrusterA.current.translation())
+                    const position = vec3(thrusterA.current.translation());
 
                     if (isControlAPushed) {
                         thrusterA.current.setNextKinematicTranslation({
                             x: position.x,
                             y: position.y + upY,
                             z: position.z
-                        })
+                        });
                     } else {
                         thrusterA.current.setNextKinematicTranslation({
                             x: position.x,
                             y: position.y - upY,
                             z: position.z
-                        })
+                        });
                     }
                 }
             }
-        )
+        );
 
         const unsuscribeB = useControlsStore.subscribe(
             (state) => state.isControlBPushed,
             (isControlBPushed) => {
                 if (thrusterB.current) {
-                    const position = vec3(thrusterB.current.translation())
+                    const position = vec3(thrusterB.current.translation());
                     if (isControlBPushed) {
                         thrusterB.current.setNextKinematicTranslation({
                             x: position.x,
                             y: position.y + upY,
                             z: position.z
-                        })
+                        });
                     } else {
                         thrusterB.current.setNextKinematicTranslation({
                             x: position.x,
                             y: position.y - upY,
                             z: position.z
-                        })
+                        });
                     }
                 }
             }
-        )
+        );
 
         return () => {
-            unsuscribeA()
-            unsuscribeB()
-        }
-    }, [])
+            unsuscribeA();
+            unsuscribeB();
+        };
+    }, []);
 
     return (
         <group {...props} dispose={null} rotation={[0, -Math.PI / 2, 0]}>
@@ -155,7 +156,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     position={[1.5, 1.5, 0]}
                     sensor
                     onIntersectionExit={() => {
-                        setIsScored(false)
+                        setIsScored(false);
                     }}
                 />
             </RigidBody>
@@ -167,7 +168,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     position={[0.497, 1.54, 0.005]}
                 >
                     <MeshTransmissionMaterial anisotropy={0.1} chromaticAberration={0.04} distortionScale={0}
-                                              temporalDistortion={0}/>
+                        temporalDistortion={0} />
                 </mesh>
             </RigidBody>
             <mesh
