@@ -1,9 +1,11 @@
 import { create } from 'zustand'
-import { devtools, persist, subscribeWithSelector } from 'zustand/middleware'
+import { devtools, persist } from 'zustand/middleware'
 
 interface ScoreState {
     score: number
+    goalScored: boolean
     increment: () => void
+    scoreGoal: () => void
 }
 
 export const useScoreStore = create<ScoreState>()(
@@ -11,16 +13,16 @@ export const useScoreStore = create<ScoreState>()(
         persist(
             (set) => ({
                 score: 0,
-                increment: () => set((state) => ({ score: state.score + 1 })),
+                goalScored: false,
+                increment: () => set((state) => ({ score: state.score + 1, goalScored: false })),
+                scoreGoal: () => set((state) => ({ goalScored: true }))
             }),
             { name: 'score' }
         )
     )
 )
 
-export const useControlsStore = create(subscribeWithSelector(() => {
-    return {
-        isControlAPushed: false,
-        isControlBPushed: false,
-    }
+export const useControlsStore = create(() => ({
+    isControlAPushed: false,
+    isControlBPushed: false,
 }))
