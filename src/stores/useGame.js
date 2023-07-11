@@ -1,12 +1,7 @@
 import { create } from 'zustand'
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware'
 
-interface ScoreState {
-    score: number
-    increment: () => void
-}
-
-export const useScoreStore = create<ScoreState>()(
+export const useScoreStore = create()(
     devtools(
         persist(
             (set) => ({

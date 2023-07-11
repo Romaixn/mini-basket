@@ -1,45 +1,16 @@
-import * as THREE from "three";
 import {useGLTF} from "@react-three/drei";
-import {GLTF} from "three-stdlib";
 import {MeshTransmissionMaterial} from "@react-three/drei"
-import {CuboidCollider, RapierRigidBody, RigidBody, vec3} from '@react-three/rapier'
-import {RefObject, useEffect, useRef, useState} from "react";
+import {CuboidCollider, RigidBody, vec3} from '@react-three/rapier'
+import {useEffect, useRef, useState} from "react";
 import {useControlsStore, useScoreStore} from '../stores/useGame'
 import {useControls} from "leva";
 
-type GLTFResult = GLTF & {
-    nodes: {
-        Table: THREE.Mesh;
-        Glass: THREE.Mesh;
-        Controls: THREE.Mesh;
-        Control_A: THREE.Mesh;
-        Control_A_Text: THREE.Mesh;
-        Control_B: THREE.Mesh;
-        Control_B_Text: THREE.Mesh;
-        Thruster_A: THREE.Mesh;
-        Thruster_B: THREE.Mesh;
-        Hide_Thruster: THREE.Mesh;
-        Base: THREE.Mesh;
-        Cylinder: THREE.Mesh;
-        Panel: THREE.Mesh;
-        Ring: THREE.Mesh;
-    };
-    materials: {
-        Wood: THREE.MeshStandardMaterial;
-        Red: THREE.MeshStandardMaterial;
-        Green: THREE.MeshStandardMaterial;
-        Glass: THREE.MeshStandardMaterial;
-        Black: THREE.MeshStandardMaterial;
-        White: THREE.MeshStandardMaterial;
-    };
-};
-
-export default function Table(props: JSX.IntrinsicElements["group"]) {
-    const {nodes, materials} = useGLTF("/models/table.gltf") as GLTFResult;
-    const controlA = useRef<THREE.Mesh>(null)
-    const controlB = useRef<THREE.Mesh>(null)
-    const thrusterA = useRef<RapierRigidBody>(null)
-    const thrusterB = useRef<RapierRigidBody>(null)
+export default function Table(props) {
+    const {nodes, materials} = useGLTF("/models/table.gltf");
+    const controlA = useRef(null)
+    const controlB = useRef(null)
+    const thrusterA = useRef(null)
+    const thrusterB = useRef(null)
 
     const [isScored, setIsScored] = useState(false)
 
@@ -59,7 +30,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
         }
     }
 
-    const clickUp = (control: RefObject<THREE.Mesh>) => {
+    const clickUp = (control) => {
         if (control.current) {
             if (control === controlA) {
                 useControlsStore.setState({isControlAPushed: false})
@@ -71,7 +42,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
         }
     }
 
-    const clickDown = (control: RefObject<THREE.Mesh>) => {
+    const clickDown = (control) => {
         if (control.current) {
             if (control === controlA) {
                 useControlsStore.setState({isControlAPushed: true})
