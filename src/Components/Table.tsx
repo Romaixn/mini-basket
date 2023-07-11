@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {useGLTF} from "@react-three/drei";
 import {GLTF} from "three-stdlib";
+import Confetti from "./Confetti";
 import {MeshTransmissionMaterial} from "@react-three/drei"
 import {CuboidCollider, RapierRigidBody, RigidBody, vec3} from '@react-three/rapier'
 import {RefObject, useEffect, useRef, useState} from "react";
@@ -42,6 +43,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
     const thrusterB = useRef<RapierRigidBody>(null)
 
     const [isScored, setIsScored] = useState(false)
+    const [showConfetti, setShowConfetti] = useState(false)
 
     const {tableRestitution, tableFriction, glassRestitution, glassFriction} = useControls('table', {
         tableRestitution: {label: 'Table Restitution', value: 0.6, min: 0, max: 1, step: 0.1},
@@ -56,6 +58,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
         if(!isScored) {
             setIsScored(true)
             increaseScore()
+            setShowConfetti(true)
         }
     }
 
@@ -156,6 +159,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     sensor
                     onIntersectionExit={() => {
                         setIsScored(false)
+                        setShowConfetti(false)
                     }}
                 />
             </RigidBody>
@@ -289,6 +293,7 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
                     />
                 </CuboidCollider>
             </RigidBody>
+            <Confetti show={showConfetti} />
         </group>
     );
 }
