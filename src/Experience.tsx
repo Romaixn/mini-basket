@@ -1,5 +1,7 @@
 import { Suspense, useRef } from "react"
 import { Mesh } from 'three'
+import Confetti from "./Components/Confetti";
+import { useScoreStore } from "./stores/useGame";
 import { useFrame } from "@react-three/fiber"
 import { PresentationControls, Center, Environment } from "@react-three/drei"
 import { Physics } from '@react-three/rapier'
@@ -28,16 +30,15 @@ const Experience: React.FC = () => {
             // rotation={[0, -Math.PI / 8, 0]}
             azimuth={[-Math.PI / 2, Math.PI / 2]}
         >
-            <group>
-                <Suspense fallback={<Fallback />}>
-                        <Physics debug={debugPhysics}>
-                            <Center>
-                                <Level />
-                            </Center>
-                        </Physics>
-                    <Zoom />
-                </Suspense>
-            </group>
+            <Suspense fallback={<Fallback />}>
+                <Physics debug={debugPhysics}>
+                    <Center>
+                        <Level />
+                        <Confetti show={useScoreStore((state) => state.showConfetti)} />
+                    </Center>
+                </Physics>
+                <Zoom />
+            </Suspense>
         </PresentationControls>
     </>
 }
@@ -57,7 +58,7 @@ const Fallback: React.FC = () => {
 
 const Zoom: React.FC = () => {
     useFrame((state, delta) => {
-    easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
+        easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
         state.camera.lookAt(0, 0, 0)
     })
 
