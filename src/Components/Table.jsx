@@ -30,81 +30,43 @@ export default function Table(props) {
         }
     }
 
-    const clickUp = (control) => {
-        if (control.current) {
-            if (control === controlA) {
-                useControlsStore.setState({isControlAPushed: false})
-            } else {
-                useControlsStore.setState({isControlBPushed: false})
-            }
-
-            control.current.position.y = 0.128
+    const clickUp = (controlRef, isControlAPushed) => {
+        if (controlRef.current) {
+            useControlsStore.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: false })
+            controlRef.current.position.y = 0.128
         }
     }
 
-    const clickDown = (control) => {
-        if (control.current) {
-            if (control === controlA) {
-                useControlsStore.setState({isControlAPushed: true})
-            } else {
-                useControlsStore.setState({isControlBPushed: true})
-            }
-
-            control.current.position.y = 0.128 - 0.1
+    const clickDown = (controlRef, isControlAPushed) => {
+        if (controlRef.current) {
+            useControlsStore.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: true })
+            controlRef.current.position.y = 0.128 - 0.1
         }
     }
 
     useEffect(() => {
-        const upY = 0.5
-
-        const unsuscribeA = useControlsStore.subscribe(
-            (state) => state.isControlAPushed,
-            (isControlAPushed) => {
-                if (thrusterA.current) {
-                    const position = vec3(thrusterA.current.translation())
-
-                    if (isControlAPushed) {
-                        thrusterA.current.setNextKinematicTranslation({
-                            x: position.x,
-                            y: position.y + upY,
-                            z: position.z
-                        })
-                    } else {
-                        thrusterA.current.setNextKinematicTranslation({
-                            x: position.x,
-                            y: position.y - upY,
-                            z: position.z
-                        })
-                    }
-                }
+        const handleKeyDown = (event) => {
+            if (event.key === 'a') {
+                clickDown(controlA, true)
+            } else if (event.key === 'd') {
+                clickDown(controlB, false)
             }
-        )
+        }
 
-        const unsuscribeB = useControlsStore.subscribe(
-            (state) => state.isControlBPushed,
-            (isControlBPushed) => {
-                if (thrusterB.current) {
-                    const position = vec3(thrusterB.current.translation())
-                    if (isControlBPushed) {
-                        thrusterB.current.setNextKinematicTranslation({
-                            x: position.x,
-                            y: position.y + upY,
-                            z: position.z
-                        })
-                    } else {
-                        thrusterB.current.setNextKinematicTranslation({
-                            x: position.x,
-                            y: position.y - upY,
-                            z: position.z
-                        })
-                    }
-                }
+        const handleKeyUp = (event) => {
+            if (event.key === 'a') {
+                clickUp(controlA, true)
+            } else if (event.key === 'd') {
+                clickUp(controlB, false)
             }
-        )
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
 
         return () => {
-            unsuscribeA()
-            unsuscribeB()
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
         }
     }, [])
 
