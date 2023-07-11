@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {useGLTF} from "@react-three/drei";
+import ConfettiEffect from './ConfettiEffect';
 import {GLTF} from "three-stdlib";
 import {MeshTransmissionMaterial} from "@react-three/drei"
 import {CuboidCollider, RapierRigidBody, RigidBody, vec3} from '@react-three/rapier'
@@ -35,7 +35,7 @@ type GLTFResult = GLTF & {
 };
 
 export default function Table(props: JSX.IntrinsicElements["group"]) {
-    const {nodes, materials} = useGLTF("/models/table.gltf") as GLTFResult;
+    const [showConfetti, setShowConfetti] = useState(false);
     const controlA = useRef<THREE.Mesh>(null)
     const controlB = useRef<THREE.Mesh>(null)
     const thrusterA = useRef<RapierRigidBody>(null)
@@ -54,8 +54,9 @@ export default function Table(props: JSX.IntrinsicElements["group"]) {
 
     const goal = () => {
         if(!isScored) {
-            setIsScored(true)
-            increaseScore()
+            setIsScored(true);
+            increaseScore();
+            setShowConfetti(true);
         }
     }
 
