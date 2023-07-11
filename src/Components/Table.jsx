@@ -166,8 +166,8 @@ export default function Table(props) {
                 geometry={nodes.Control_A.geometry}
                 material={materials.Red}
                 position={[4.184, 0.128, 0.744]}
-                onPointerUp={() => clickUp(controlA)}
-                onPointerDown={() => clickDown(controlA)}
+                onPointerUp={() => clickUp(controlA, true)}
+                onPointerDown={() => clickDown(controlA, true)}
             >
                 <mesh
                     castShadow
@@ -185,8 +185,8 @@ export default function Table(props) {
                 geometry={nodes.Control_B.geometry}
                 material={materials.Green}
                 position={[4.183, 0.128, -0.754]}
-                onPointerUp={() => clickUp(controlB)}
-                onPointerDown={() => clickDown(controlB)}
+                onPointerUp={() => clickUp(controlB, false)}
+                onPointerDown={() => clickDown(controlB, false)}
             >
                 <mesh
                     castShadow
