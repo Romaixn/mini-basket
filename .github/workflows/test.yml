@@ -1,0 +1,23 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install pnpm
+      run: curl -f https://get.pnpm.io/v6.js | node - add --global pnpm
+
+    - name: Install dependencies
+      run: pnpm install --no-frozen-lockfile
+
+    - name: Run tests
+      run: pnpm run test

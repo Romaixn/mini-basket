@@ -1,31 +1,11 @@
-import * as THREE from "three";
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { GLTF } from "three-stdlib";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { RigidBody } from "@react-three/rapier";
 import { useControls } from 'leva'
 import { useFrame } from "@react-three/fiber";
 
-interface BallProps {
-    position: {
-        x: number,
-        y: number,
-        z: number
-    },
-    color?: string
-}
-
-type GLTFResult = GLTF & {
-    nodes: {
-        Sphere: THREE.Mesh;
-    };
-    materials: {
-        ["Material.001"]: THREE.MeshStandardMaterial;
-    };
-};
-
-const Ball: React.FC<BallProps> = ({ position }) => {
-    const ball = useRef<RapierRigidBody>(null)
+const Ball = ({ position }) => {
+    const ball = useRef(null)
 
     const { ballRestitution, ballFriction } = useControls('ball', {
         ballRestitution: { label: 'Restitution', value: 1, min: 0, max: 10 },
@@ -48,7 +28,7 @@ const Ball: React.FC<BallProps> = ({ position }) => {
         }
     })
 
-    const { nodes, materials } = useGLTF("/models/basketball.glb") as GLTFResult;
+    const { nodes, materials } = useGLTF("/models/basketball.glb");
     return (
         <group position={[position.x, position.y, position.z]} scale={0.7} dispose={null}>
             <RigidBody ref={ball} colliders="ball" restitution={ballRestitution} friction={ballFriction} gravityScale={3.5}>

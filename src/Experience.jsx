@@ -1,5 +1,4 @@
 import { Suspense, useRef } from "react"
-import { Mesh } from 'three'
 import { useFrame } from "@react-three/fiber"
 import { PresentationControls, Center, Environment } from "@react-three/drei"
 import { Physics } from '@react-three/rapier'
@@ -9,7 +8,7 @@ import { useControls } from 'leva'
 import Lights from "./Lights"
 import Level from "./Level"
 
-const Experience: React.FC = () => {
+const Experience = () => {
     const { perfVisible, debugPhysics } = useControls('debug', {
         perfVisible: { label: 'Performance', value: false },
         debugPhysics: { label: 'Physics', value: false },
@@ -43,8 +42,8 @@ const Experience: React.FC = () => {
 }
 
 
-const Fallback: React.FC = () => {
-    const ref = useRef<Mesh>(null!)
+const Fallback = () => {
+    const ref = useRef(null)
     useFrame((state) => (ref.current.position.x = Math.sin(state.clock.elapsedTime * 2)))
 
     return (
@@ -55,7 +54,7 @@ const Fallback: React.FC = () => {
     )
 }
 
-const Zoom: React.FC = () => {
+const Zoom = () => {
     useFrame((state, delta) => {
     easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
         state.camera.lookAt(0, 0, 0)

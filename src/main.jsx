@@ -8,7 +8,7 @@ import './index.css'
 
 const debug = /[?&]debug=/.test(window.location.search)
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Leva hidden={!debug} />
     <Interface />

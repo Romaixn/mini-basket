@@ -1,4 +1,4 @@
-const Lights: React.FC = () => {
+const Lights = () => {
     return <>
         <directionalLight
             castShadow
