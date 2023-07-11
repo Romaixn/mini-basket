@@ -25,6 +25,10 @@
     "zustand": "^4.3.9"
   },
   "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.5",
+    "@babel/preset-react": "^7.16.5",
+    "babel-jest": "^27.4.5",
     "@react-three/test-renderer": "^8.1.5",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.2.14",
