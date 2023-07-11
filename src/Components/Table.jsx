@@ -30,27 +30,17 @@ export default function Table(props) {
         }
     }
 
-    const clickUp = (control) => {
-        if (control.current) {
-            if (control === controlA) {
-                useControlsStore.setState({isControlAPushed: false})
-            } else {
-                useControlsStore.setState({isControlBPushed: false})
-            }
-
-            control.current.position.y = 0.128
+    const clickUp = (controlRef, isControlAPushed) => {
+        if (controlRef.current) {
+            useControlsStore.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: false })
+            controlRef.current.position.y = 0.128
         }
     }
 
-    const clickDown = (control) => {
-        if (control.current) {
-            if (control === controlA) {
-                useControlsStore.setState({isControlAPushed: true})
-            } else {
-                useControlsStore.setState({isControlBPushed: true})
-            }
-
-            control.current.position.y = 0.128 - 0.1
+    const clickDown = (controlRef, isControlAPushed) => {
+        if (controlRef.current) {
+            useControlsStore.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: true })
+            controlRef.current.position.y = 0.128 - 0.1
         }
     }
 
@@ -102,7 +92,28 @@ export default function Table(props) {
             }
         )
 
+        const handleKeyDown = (event) => {
+            if (event.key === 'a') {
+                clickDown(controlA, true)
+            } else if (event.key === 'd') {
+                clickDown(controlB, false)
+            }
+        }
+
+        const handleKeyUp = (event) => {
+            if (event.key === 'a') {
+                clickUp(controlA, true)
+            } else if (event.key === 'd') {
+                clickUp(controlB, false)
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        window.addEventListener('keyup', handleKeyUp)
+
         return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+            window.removeEventListener('keyup', handleKeyUp)
             unsuscribeA()
             unsuscribeB()
         }
