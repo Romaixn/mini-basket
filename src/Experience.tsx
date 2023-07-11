@@ -1,4 +1,5 @@
 import { Suspense, useRef } from "react"
+import Confetti from './Components/Confetti';
 import { Mesh } from 'three'
 import { useFrame } from "@react-three/fiber"
 import { PresentationControls, Center, Environment } from "@react-three/drei"
@@ -30,11 +31,12 @@ const Experience: React.FC = () => {
         >
             <group>
                 <Suspense fallback={<Fallback />}>
-                        <Physics debug={debugPhysics}>
-                            <Center>
-                                <Level />
-                            </Center>
-                        </Physics>
+                    <Physics debug={debugPhysics}>
+                        <Center>
+                            <Level />
+                            <Confetti />
+                        </Center>
+                    </Physics>
                     <Zoom />
                 </Suspense>
             </group>
@@ -57,7 +59,7 @@ const Fallback: React.FC = () => {
 
 const Zoom: React.FC = () => {
     useFrame((state, delta) => {
-    easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
+        easing.damp3(state.camera.position, [0, 1, 8], 1, delta)
         state.camera.lookAt(0, 0, 0)
     })
 
