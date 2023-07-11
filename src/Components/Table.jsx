@@ -45,6 +45,53 @@ export default function Table(props) {
     }
 
     useEffect(() => {
+        const upY = 0.5
+
+        const unsuscribeA = useControlsStore.subscribe(
+            (state) => state.isControlAPushed,
+            (isControlAPushed) => {
+                if (thrusterA.current) {
+                    const position = vec3(thrusterA.current.translation())
+
+                    if (isControlAPushed) {
+                        thrusterA.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y + upY,
+                            z: position.z
+                        })
+                    } else {
+                        thrusterA.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y - upY,
+                            z: position.z
+                        })
+                    }
+                }
+            }
+        )
+
+        const unsuscribeB = useControlsStore.subscribe(
+            (state) => state.isControlBPushed,
+            (isControlBPushed) => {
+                if (thrusterB.current) {
+                    const position = vec3(thrusterB.current.translation())
+                    if (isControlBPushed) {
+                        thrusterB.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y + upY,
+                            z: position.z
+                        })
+                    } else {
+                        thrusterB.current.setNextKinematicTranslation({
+                            x: position.x,
+                            y: position.y - upY,
+                            z: position.z
+                        })
+                    }
+                }
+            }
+        )
+
         const handleKeyDown = (event) => {
             if (event.key === 'a') {
                 clickDown(controlA, true)
@@ -67,6 +114,8 @@ export default function Table(props) {
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
             window.removeEventListener('keyup', handleKeyUp)
+            unsuscribeA()
+            unsuscribeB()
         }
     }, [])
 
