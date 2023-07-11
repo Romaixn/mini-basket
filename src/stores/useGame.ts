@@ -18,9 +18,11 @@ export const useScoreStore = create<ScoreState>()(
     )
 )
 
-export const useControlsStore = create(subscribeWithSelector(() => {
+export const useControlsStore = create(subscribeWithSelector((set) => {
     return {
         isControlAPushed: false,
         isControlBPushed: false,
+        confetti: false,
+        setConfetti: (value: boolean) => set({ confetti: value }),
     }
 }))
