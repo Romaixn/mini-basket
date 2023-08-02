@@ -1,12 +1,15 @@
-// CONFETTI COMPONENT BY ANDERSON MANCINI
+// CONFETTI COMPONENT BY ANDERSON MANCINI FIXED BY RHERAULT
 // Thanks <3
 
 import React, { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 export default function ExplosionConfetti({ isExploding }) {
   const groupRef = useRef()
+  const [booms, setBooms] = useState([])
 
   const options = {
     amount: 100,
@@ -19,11 +22,10 @@ export default function ExplosionConfetti({ isExploding }) {
     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
   }
 
-  let booms = []
   options.rate = options.rate / 100
   const geometry = new THREE.PlaneGeometry(0.03, 0.03, 1, 1)
 
-  function explode() {
+  const explode = () => {
     const boom = new THREE.Object3D()
     boom.life = Math.random() * 5 + 5
     boom.position.x = -(options.areaWidth / 2) + options.areaWidth * Math.random()
@@ -60,7 +62,7 @@ export default function ExplosionConfetti({ isExploding }) {
       particle.rotateSpeedZ = Math.random() * 0.8 - 0.4
     }
 
-    boom.dispose = function () {
+    boom.dispose = () => {
       for (let i = 0; i < boom.children.length; i++) {
         const particle = boom.children[i]
         particle.material.dispose()
@@ -74,42 +76,42 @@ export default function ExplosionConfetti({ isExploding }) {
   useFrame(() => {
     if (isExploding && Math.random() < options.rate) explode()
 
+        console.log(booms);
     for (let i = 0; i < booms.length; i++) {
-      const boom = booms[i]
+        const boom = booms[i]
 
-      for (let k = 0; k < boom.children.length; k++) {
-        let particle = boom.children[k]
+        for (let k = 0; k < boom.children.length; k++) {
+            let particle = boom.children[k]
 
-        particle.destination.y -= THREE.MathUtils.randFloat(0.1, 0.3)
-        particle.life -= THREE.MathUtils.randFloat(0.005, 0.01)
+            particle.destination.y -= THREE.MathUtils.randFloat(0.1, 0.3)
+            particle.life -= THREE.MathUtils.randFloat(0.005, 0.01)
 
-        const speedX = (particle.destination.x - particle.position.x) / 200
-        const speedY = (particle.destination.y - particle.position.y) / 80
-        const speedZ = (particle.destination.z - particle.position.z) / 200
+            const speedX = (particle.destination.x - particle.position.x) / 200
+            const speedY = (particle.destination.y - particle.position.y) / 80
+            const speedZ = (particle.destination.z - particle.position.z) / 200
 
-        particle.position.x += speedX
-        particle.position.y += speedY
-        particle.position.z += speedZ
+            particle.position.x += speedX
+            particle.position.y += speedY
+            particle.position.z += speedZ
 
-        particle.rotation.y += particle.rotateSpeedY
-        particle.rotation.x += particle.rotateSpeedX
-        particle.rotation.z += particle.rotateSpeedZ
+            particle.rotation.y += particle.rotateSpeedY
+            particle.rotation.x += particle.rotateSpeedX
+            particle.rotation.z += particle.rotateSpeedZ
 
-        particle.material.opacity -= THREE.MathUtils.randFloat(0.005, 0.01)
+            particle.material.opacity -= THREE.MathUtils.randFloat(0.005, 0.01)
 
-        if (particle.position.y < -options.fallingHeight) {
-          particle.material.dispose()
-          particle.geometry.dispose()
-          boom.remove(particle)
-          particle = null
+            if (particle.position.y < -options.fallingHeight) {
+                particle.material.dispose()
+                particle.geometry.dispose()
+                boom.remove(particle)
+                particle = null
+            }
         }
-      }
 
-      if (boom.children.length <= 0) {
-        console.log('DISPOSE BOOM')
-        boom.dispose()
-        booms = booms.filter((b) => b !== boom)
-      }
+        if (boom.children.length <= 0) {
+            boom.dispose()
+            setBooms(booms.filter((b) => b !== boom))
+        }
     }
   })
 
