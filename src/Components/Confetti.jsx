@@ -76,7 +76,6 @@ export default function ExplosionConfetti({ isExploding }) {
   useFrame(() => {
     if (isExploding && Math.random() < options.rate) explode()
 
-        console.log(booms);
     for (let i = 0; i < booms.length; i++) {
         const boom = booms[i]
 
