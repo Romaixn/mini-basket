@@ -15,15 +15,17 @@ const Experience = () => {
         perfVisible: { label: 'Performance', value: false },
         debugPhysics: { label: 'Physics', value: false },
     })
-
-    const [isScored, setIsScored] = useState(true)
+    const [isExploding, setIsExploding] = useState()
 
     useEffect(() => {
         const unsuscribeIsScored = useGame.subscribe(
-            (state) => state.isScored,
-            (isScored) => {
-                if(isScored) {
-                    setIsScored(isScored)
+            (state) => state.score,
+            (score) => {
+                if(score) {
+                    setIsExploding(true)
+                    setTimeout(() => {
+                        setIsExploding(false)
+                    }, 3000)
                 }
             }
         )
@@ -49,7 +51,7 @@ const Experience = () => {
 
             <group>
                 <Suspense fallback={<Fallback />}>
-                    { isScored && <Confetti dash={0.95} count={10} radius={5} colors={['#A2CCB6', '#FCEEB5', '#EE786E', '#e0feff']} /> }
+                    <Confetti isExploding={isExploding}  />
                     <Physics debug={debugPhysics}>
                         <Center>
                             <Level />

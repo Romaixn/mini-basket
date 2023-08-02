@@ -7,7 +7,6 @@ export default create(subscribeWithSelector((set) => {
          * Score
         */
         score: 0,
-        isScored: false,
         increment: () => set((state) => ({ score: state.score + 1 })),
 
         /**

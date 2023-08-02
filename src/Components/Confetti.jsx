@@ -1,16 +1,12 @@
 // CONFETTI COMPONENT BY ANDERSON MANCINI
 // Thanks <3
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import useGame from '../stores/useGame'
 
-export default function ExplosionConfetti() {
+export default function ExplosionConfetti({ isExploding }) {
   const groupRef = useRef()
-  const [isExploding, setIsExploding] = useState()
-  const [explodingTimeout, setExplodingTimeout] = useState()
-  const setIsScored = (isScored) => useGame.setState({ isScored: isScored })
 
   const options = {
     amount: 100,
@@ -76,64 +72,46 @@ export default function ExplosionConfetti() {
   }
 
   useFrame(() => {
-    if (isExploding) {
-      if (Math.random() < options.rate) explode()
+    if (isExploding && Math.random() < options.rate) explode()
 
-      let particleAmount = 0
+    for (let i = 0; i < booms.length; i++) {
+      const boom = booms[i]
 
-      for (var i = 0; i < booms.length; i++) {
-        var boom = booms[i]
+      for (let k = 0; k < boom.children.length; k++) {
+        let particle = boom.children[k]
 
-        for (var k = 0; k < boom.children.length; k++) {
-          var particle = boom.children[k]
+        particle.destination.y -= THREE.MathUtils.randFloat(0.1, 0.3)
+        particle.life -= THREE.MathUtils.randFloat(0.005, 0.01)
 
-          particle.destination.y -= THREE.MathUtils.randFloat(0.1, 0.3)
-          particle.life -= THREE.MathUtils.randFloat(0.005, 0.01)
+        const speedX = (particle.destination.x - particle.position.x) / 200
+        const speedY = (particle.destination.y - particle.position.y) / 80
+        const speedZ = (particle.destination.z - particle.position.z) / 200
 
-          var speedX = (particle.destination.x - particle.position.x) / 200
-          var speedY = (particle.destination.y - particle.position.y) / 80
-          var speedZ = (particle.destination.z - particle.position.z) / 200
+        particle.position.x += speedX
+        particle.position.y += speedY
+        particle.position.z += speedZ
 
-          particle.position.x += speedX
-          particle.position.y += speedY
-          particle.position.z += speedZ
+        particle.rotation.y += particle.rotateSpeedY
+        particle.rotation.x += particle.rotateSpeedX
+        particle.rotation.z += particle.rotateSpeedZ
 
-          particle.rotation.y += particle.rotateSpeedY
-          particle.rotation.x += particle.rotateSpeedX
-          particle.rotation.z += particle.rotateSpeedZ
+        particle.material.opacity -= THREE.MathUtils.randFloat(0.005, 0.01)
 
-          particle.material.opacity -= THREE.MathUtils.randFloat(0.005, 0.01)
-
-          if (particle.position.y < -options.fallingHeight) {
-            particle.material.dispose()
-            particle.geometry.dispose()
-            boom.remove(particle)
-            particle = null
-          }
+        if (particle.position.y < -options.fallingHeight) {
+          particle.material.dispose()
+          particle.geometry.dispose()
+          boom.remove(particle)
+          particle = null
         }
+      }
 
-        if (boom.children.length <= 0) {
-          boom.dispose()
-          booms = booms.filter((b) => b !== boom)
-        }
-        particleAmount += boom.children.length
+      if (boom.children.length <= 0) {
+        console.log('DISPOSE BOOM')
+        boom.dispose()
+        booms = booms.filter((b) => b !== boom)
       }
     }
   })
-
-  useEffect(() => {
-    if (explodingTimeout) {
-      clearTimeout(explodingTimeout)
-    }
-    setIsExploding(true)
-    const timeout = setTimeout(() => {
-      setIsExploding(false)
-      setIsScored(false)
-    }, 35000)
-    setExplodingTimeout(timeout)
-
-    return () => clearTimeout(explodingTimeout)
-  }, [])
 
   return <mesh ref={groupRef} position={[0, 2, -8]} />
 }
