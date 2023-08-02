@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Basketball';
+    src: local("Basketball"),
+        url("/fonts/Basketball.otf") format("truetype");
+}
+
 * {
     box-sizing: border-box;
 }
@@ -5,6 +11,7 @@
 html,
 body {
     background-color: #ddc28d;
+    font-family: 'Basketball', sans-serif;
 }
 
 html,
@@ -33,4 +40,5 @@ div {
     justify-content: center;
     align-items: center;
     color: #fff;
+    font-size: 1.25rem;
 }

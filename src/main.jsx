@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber'
 import { Leva } from 'leva'
 import Experience from './Experience'
 import Interface from './Interface'
+import '/fonts/Basketball.otf'
 import './index.css'
 
 const debug = /[?&]debug=/.test(window.location.search)

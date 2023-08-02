@@ -2,7 +2,7 @@ import {useGLTF} from "@react-three/drei";
 import {MeshTransmissionMaterial} from "@react-three/drei"
 import {CuboidCollider, RigidBody, vec3} from '@react-three/rapier'
 import {useEffect, useRef, useState} from "react";
-import {useControlsStore, useScoreStore} from '../stores/useGame'
+import useGame from '../stores/useGame'
 import {useControls} from "leva";
 
 export default function Table(props) {
@@ -21,25 +21,26 @@ export default function Table(props) {
         glassFriction: {label: 'Glass Friction', value: 0, min: 0, max: 10},
     }, {collapsed: true})
 
-    const increaseScore = useScoreStore((state) => state.increment)
+    const increaseScore = useGame((state) => state.increment)
 
     const goal = () => {
         if(!isScored) {
             setIsScored(true)
             increaseScore()
+            useGame.setState({ isScored: true })
         }
     }
 
     const clickUp = (controlRef, isControlAPushed) => {
         if (controlRef.current) {
-            useControlsStore.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: false })
+            useGame.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: false })
             controlRef.current.position.y = 0.128
         }
     }
 
     const clickDown = (controlRef, isControlAPushed) => {
         if (controlRef.current) {
-            useControlsStore.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: true })
+            useGame.setState({ [isControlAPushed ? 'isControlAPushed' : 'isControlBPushed']: true })
             controlRef.current.position.y = 0.128 - 0.1
         }
     }
@@ -47,7 +48,7 @@ export default function Table(props) {
     useEffect(() => {
         const upY = 0.5
 
-        const unsuscribeA = useControlsStore.subscribe(
+        const unsuscribeA = useGame.subscribe(
             (state) => state.isControlAPushed,
             (isControlAPushed) => {
                 if (thrusterA.current) {
@@ -70,7 +71,7 @@ export default function Table(props) {
             }
         )
 
-        const unsuscribeB = useControlsStore.subscribe(
+        const unsuscribeB = useGame.subscribe(
             (state) => state.isControlBPushed,
             (isControlBPushed) => {
                 if (thrusterB.current) {
