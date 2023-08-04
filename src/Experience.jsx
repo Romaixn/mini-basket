@@ -25,7 +25,7 @@ const Experience = () => {
                     setIsExploding(true)
                     setTimeout(() => {
                         setIsExploding(false)
-                    }, 3000)
+                    }, 2000)
                 }
             }
         )
