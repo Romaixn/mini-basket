@@ -48,10 +48,9 @@ const Experience = () => {
             // rotation={[0, -Math.PI / 8, 0]}
             azimuth={[-Math.PI / 2, Math.PI / 2]}
         >
-
             <group>
                 <Suspense fallback={<Fallback />}>
-                    <Confetti isExploding={isExploding}  />
+                    <Confetti isExploding={isExploding} amount={200} rate={3} areaWidth={5} areaHeight={3} fallingHeight={6} />
                     <Physics debug={debugPhysics}>
                         <Center>
                             <Level />
