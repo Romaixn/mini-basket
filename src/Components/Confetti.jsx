@@ -5,19 +5,18 @@ import React, { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useState } from 'react'
-import { useEffect } from 'react'
 
 export default function ExplosionConfetti({ isExploding }) {
   const groupRef = useRef()
   const [booms, setBooms] = useState([])
 
   const options = {
-    amount: 100,
-    rate: 3,
+    amount: 200,
+    rate: 2,
     radius: 15,
-    areaWidth: 4,
-    areaHeight: 2,
-    fallingHeight: 5,
+    areaWidth: 5,
+    areaHeight: 3,
+    fallingHeight: 6,
     fallingSpeed: 8,
     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
   }
@@ -29,7 +28,7 @@ export default function ExplosionConfetti({ isExploding }) {
     const boom = new THREE.Object3D()
     boom.life = Math.random() * 5 + 5
     boom.position.x = -(options.areaWidth / 2) + options.areaWidth * Math.random()
-    boom.position.y = options.fallingHeight + Math.random() * 5 - options.fallingSpeed
+    boom.position.y = options.fallingHeight + options.areaHeight - options.fallingSpeed
     boom.position.z = -(options.areaWidth / 2) + options.areaWidth * Math.random()
     groupRef.current.add(boom)
     booms.push(boom)
@@ -40,7 +39,7 @@ export default function ExplosionConfetti({ isExploding }) {
         side: THREE.DoubleSide
       })
       const particle = new THREE.Mesh(geometry, material)
-      particle.castShadow = true
+      particle.castShadow = false
       boom.add(particle)
 
       particle.life = 1
@@ -86,7 +85,7 @@ export default function ExplosionConfetti({ isExploding }) {
             particle.life -= THREE.MathUtils.randFloat(0.005, 0.01)
 
             const speedX = (particle.destination.x - particle.position.x) / 200
-            const speedY = (particle.destination.y - particle.position.y) / 80
+            const speedY = (particle.destination.y - particle.position.y) / 200
             const speedZ = (particle.destination.z - particle.position.z) / 200
 
             particle.position.x += speedX
