@@ -17,23 +17,26 @@ const Experience = () => {
     })
     const [isExploding, setIsExploding] = useState()
 
+    const [prevScore, setPrevScore] = useState(0);
+    
     useEffect(() => {
         const unsuscribeIsScored = useGame.subscribe(
             (state) => state.score,
             (score) => {
-                if(score) {
+                if(score && score > prevScore) {
                     setIsExploding(true)
                     setTimeout(() => {
                         setIsExploding(false)
                     }, 2000)
+                    setPrevScore(score);
                 }
             }
         )
-
+    
         return () => {
             unsuscribeIsScored()
         }
-    }, [])
+    }, [prevScore])
 
     return <>
         <color attach="background" args={["#ddc28d"]} />
