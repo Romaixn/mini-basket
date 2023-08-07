@@ -63,14 +63,17 @@ export default function ExplosionConfetti(
             uniform float time;
             void main() {
               vec3 pos = position;
+              // Update this code to implement the intended movement of the particles
               pos.y -= time;
               gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
             }
           `,
           fragmentShader: `
             uniform vec3 color;
+            uniform float opacity;
             void main() {
-              gl_FragColor = vec4(color, 1.0);
+              // Update this code to use the opacity uniform
+              gl_FragColor = vec4(color, opacity);
             }
           `,
           side: THREE.DoubleSide
@@ -109,7 +112,7 @@ export default function ExplosionConfetti(
     }
   }
 
-  useFrame(() => {
+  useFrame((state, delta) => {
     if (isExploding && Math.random() < rate) explode()
   
     let particleAmount = 0
@@ -120,7 +123,8 @@ export default function ExplosionConfetti(
       for (let k = 0; k < boom.children.length; k++) {
         let particle = boom.children[k]
   
-        particle.material.uniforms.time.value += 0.01;
+        // Update the time uniform with the elapsed time
+        particle.material.uniforms.time.value += delta;
   
         if (particle.position.y < -fallingHeight) {
           particle.material.dispose()
