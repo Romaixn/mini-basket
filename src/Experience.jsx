@@ -53,7 +53,7 @@ const Experience = () => {
         >
             <group>
                 <Suspense fallback={<Fallback />}>
-                    <Confetti style={{ visibility: isExploding ? 'visible' : 'hidden' }} isExploding={isExploding} amount={200} rate={2} areaWidth={5} areaHeight={3} fallingHeight={6} />
+                    <Confetti style={{ visibility: (isExploding === true || isExploding === false) ? (isExploding ? 'visible' : 'hidden') : 'hidden' }} isExploding={isExploding} amount={200} rate={2} areaWidth={5} areaHeight={3} fallingHeight={6} />
                     <Physics debug={debugPhysics}>
                         <Center>
                             <Level />
