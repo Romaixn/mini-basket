@@ -93,7 +93,12 @@ export default function ExplosionConfetti(
   }
 
   useFrame(() => {
-    if (isExploding && Math.random() < rate) explode()
+    if (Math.random() < rate) explode()
+    if (!isExploding) {
+      groupRef.current.style.animationPlayState = 'paused';
+    } else {
+      groupRef.current.style.animationPlayState = 'running';
+    }
   
     let particleAmount = 0
   
