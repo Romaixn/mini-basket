@@ -23,7 +23,7 @@ const Experience = () => {
         const unsuscribeIsScored = useGame.subscribe(
             (state) => state.score,
             (score) => {
-                if(score && score > prevScore) {
+                if(score != prevScore) {
                     setIsExploding(true)
                     setTimeout(() => {
                         setIsExploding(false)
@@ -59,7 +59,6 @@ const Experience = () => {
                             <Level />
                         </Center>
                     </Physics>
-                    <Zoom />
                 </Suspense>
             </group>
         </PresentationControls>
