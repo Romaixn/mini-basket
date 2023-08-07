@@ -40,11 +40,14 @@ export default function ExplosionConfetti(
 ) {
   const groupRef = useRef()
   const [booms, setBooms] = useState([])
+  const [isDestroyed, setIsDestroyed] = useState(false) // Add a new state variable isDestroyed and initialize it to false
 
   rate = rate / 100
   const geometry = new THREE.PlaneGeometry(0.03, 0.03, 1, 1)
 
   function explode() {
+    setIsDestroyed(false) // Modify the explode function to set isDestroyed to false
+
     const boom = new THREE.Object3D()
     boom.life = Math.random() * 5 + 5
     boom.position.x = -(areaWidth / 2) + areaWidth * Math.random()
@@ -112,6 +115,21 @@ export default function ExplosionConfetti(
     }
   }
 
+  useEffect(() => {
+    if (!isExploding && !isDestroyed) { // Add a new useEffect hook to listen for changes in isExploding and isDestroyed
+      destroy() // Call the destroy function when isExploding is false and isDestroyed is false
+    }
+  }, [isExploding, isDestroyed])
+
+  function destroy() {
+    for (let i = 0; i < booms.length; i++) {
+      const boom = booms[i]
+      boom.dispose()
+    }
+    setBooms([])
+    setIsDestroyed(true) // Implement the destroy function to remove the confetti particles and set isDestroyed to true
+  }
+
   useFrame((state, delta) => {
     if (isExploding && Math.random() < rate) explode()
   
@@ -123,7 +141,6 @@ export default function ExplosionConfetti(
       for (let k = 0; k < boom.children.length; k++) {
         let particle = boom.children[k]
   
-        // Update the time uniform with the elapsed time
         particle.material.uniforms.time.value += delta;
   
         if (particle.position.y < -fallingHeight) {
