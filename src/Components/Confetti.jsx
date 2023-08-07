@@ -6,21 +6,13 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-/**
- * @param {Object} options
- * @param {Boolean | undefined} options.isExploding Enable exploding
- * @param {Number | undefined} options.amount The amount of particles
- * @param {Number | undefined} options.rate Increases or decreases the frequency for particles. Don't set it too high.
- * @param {Number | undefined} options.radius The radius of each explosion.
- * @param {Number | undefined} options.areaWidth The qrea width for explosion.
- * @param {Number | undefined} options.areaHeight The qrea height for explosion.
- * @param {Number | undefined} options.fallingHeight Height for the particles to fall from
- * @param {Number | undefined} options.fallingSpeed The speed of particles
- * @param {(Number)[] | undefined} options.colors Array of Hex color codes for particles. Example: [0x0000ff, 0xff0000, 0xffff00]
- * @param {Number | String | undefined} options.duration Duration of the particles in Milliseconds. Set as 'forever' string for infinity explosion
- * @param {Boolean | undefined} options.enableShadows Enable particle shadows. Set false for better performance.
- *
- */
+const vertexShader = `
+  // vertex shader code here
+`
+
+const fragmentShader = `
+  // fragment shader code here
+`
 
 export default function ExplosionConfetti(
   {
@@ -54,8 +46,17 @@ export default function ExplosionConfetti(
     booms.push(boom)
 
     for (let i = 0; i < amount; i++) {
-      const material = new THREE.MeshBasicMaterial({
-        color: colors[Math.floor(Math.random() * colors.length)],
+      const material = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms: {
+          color: { value: colors[Math.floor(Math.random() * colors.length)] },
+          size: { value: Math.random() * 2 + 1 },
+          rotateSpeedX: { value: Math.random() * 0.8 - 0.4 },
+          rotateSpeedY: { value: Math.random() * 0.8 - 0.4 },
+          rotateSpeedZ: { value: Math.random() * 0.8 - 0.4 },
+          opacity: { value: 1 }
+        },
         side: THREE.DoubleSide
       })
       const particle = new THREE.Mesh(geometry, material)
@@ -72,13 +73,6 @@ export default function ExplosionConfetti(
       particle.rotation.x = Math.random() * 360
       particle.rotation.y = Math.random() * 360
       particle.rotation.z = Math.random() * 360
-
-      const size = Math.random() * 2 + 1
-      particle.scale.set(size, size, size)
-
-      particle.rotateSpeedX = Math.random() * 0.8 - 0.4
-      particle.rotateSpeedY = Math.random() * 0.8 - 0.4
-      particle.rotateSpeedZ = Math.random() * 0.8 - 0.4
     }
 
     boom.dispose = function () {
@@ -118,7 +112,7 @@ export default function ExplosionConfetti(
         particle.rotation.x += particle.rotateSpeedX
         particle.rotation.z += particle.rotateSpeedZ
   
-        particle.material.opacity -= THREE.MathUtils.randFloat(0.005, 0.01)
+        particle.material.uniforms.opacity.value -= THREE.MathUtils.randFloat(0.005, 0.01)
   
         if (particle.position.y < -fallingHeight) {
           particle.material.dispose()
