@@ -142,22 +142,31 @@ export default function ExplosionConfetti(
         let particle = boom.children[k]
   
         particle.material.uniforms.time.value += delta;
-  
+        
         if (particle.position.y < -fallingHeight) {
           particle.material.dispose()
           particle.geometry.dispose()
           boom.remove(particle)
           particle = null
+        } else if (particle.position.y > areaHeight + fallingHeight) {
+          particle.material.dispose()
+          particle.geometry.dispose()
+          boom.remove(particle)
+          particle = null
         }
-      }
-  
-      if (boom.children.length <= 0) {
+        }
+        
+        if (boom.children.length <= 0) {
         boom.dispose()
         setBooms(booms.filter((b) => b !== boom))
-      }
-      particleAmount += boom.children.length
-    }
-  })
-
-  return <mesh ref={groupRef} position={[0, 2, -8]} />
-}
+        }
+        particleAmount += boom.children.length
+        }
+        
+        if (isExploding && Date.now() - startTime > duration) {
+        destroy()
+        }
+        })
+        
+        return <mesh ref={groupRef} position={[0, 2, -8]} />
+        }
