@@ -2,7 +2,7 @@
 // Based on: https://github.com/JamesChan21/threejs-confetti
 // Based on: https://github.com/daniel-lundin/dom-confetti
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -94,32 +94,32 @@ export default function ExplosionConfetti(
 
   useFrame(() => {
     if (isExploding && Math.random() < rate) explode()
-  
+
     let particleAmount = 0
-  
+
     for (let i = 0; i < booms.length; i++) {
       const boom = booms[i]
-  
+
       for (let k = 0; k < boom.children.length; k++) {
         let particle = boom.children[k]
-  
+
         particle.destination.y -= THREE.MathUtils.randFloat(0.1, 0.3)
         particle.life -= THREE.MathUtils.randFloat(0.005, 0.01)
-  
+
         const speedX = (particle.destination.x - particle.position.x) / 200
         const speedY = (particle.destination.y - particle.position.y) / 200
         const speedZ = (particle.destination.z - particle.position.z) / 200
-  
+
         particle.position.x += speedX
         particle.position.y += speedY
         particle.position.z += speedZ
-  
+
         particle.rotation.y += particle.rotateSpeedY
         particle.rotation.x += particle.rotateSpeedX
         particle.rotation.z += particle.rotateSpeedZ
-  
+
         particle.material.opacity -= THREE.MathUtils.randFloat(0.005, 0.01)
-  
+
         if (particle.position.y < -fallingHeight) {
           particle.material.dispose()
           particle.geometry.dispose()
@@ -127,7 +127,7 @@ export default function ExplosionConfetti(
           particle = null
         }
       }
-  
+
       if (boom.children.length <= 0) {
         boom.dispose()
         setBooms(booms.filter((b) => b !== boom))
