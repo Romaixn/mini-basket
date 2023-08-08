@@ -1,4 +1,4 @@
-import { DepthOfField, EffectComposer, N8AO, SSAO } from "@react-three/postprocessing";
+import { EffectComposer, N8AO, SSAO } from "@react-three/postprocessing";
 
 export default function Effects() {
     return <EffectComposer>

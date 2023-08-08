@@ -45,7 +45,6 @@ const Experience = () => {
 
         <Environment preset="city" />
         <Lights />
-        <Effects />
 
         <PresentationControls
             global
