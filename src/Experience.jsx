@@ -9,6 +9,7 @@ import Lights from "./Lights"
 import Level from "./Level"
 import Confetti from "./Components/Confetti.jsx";
 import useGame from "./stores/useGame.js";
+import Effects from "./Effects"
 
 const Experience = () => {
     const { perfVisible, debugPhysics } = useControls('debug', {
@@ -18,7 +19,7 @@ const Experience = () => {
     const [isExploding, setIsExploding] = useState()
 
     const [prevScore, setPrevScore] = useState(0);
-    
+
     useEffect(() => {
         const unsuscribeIsScored = useGame.subscribe(
             (state) => state.score,
@@ -32,7 +33,7 @@ const Experience = () => {
                 }
             }
         )
-    
+
         return () => {
             unsuscribeIsScored()
         }
@@ -44,6 +45,7 @@ const Experience = () => {
 
         <Environment preset="city" />
         <Lights />
+        <Effects />
 
         <PresentationControls
             global
@@ -53,7 +55,7 @@ const Experience = () => {
         >
             <group>
                 <Suspense fallback={<Fallback />}>
-                    <Confetti isExploding={isExploding} amount={200} rate={2} areaWidth={5} areaHeight={3} fallingHeight={6} />
+                    <Confetti isExploding={isExploding} rate={2} areaWidth={5} areaHeight={3} fallingHeight={6} />
                     <Physics debug={debugPhysics}>
                         <Center>
                             <Level />
