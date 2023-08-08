@@ -1,7 +1,8 @@
-import { DepthOfField, EffectComposer } from "@react-three/postprocessing";
+import { DepthOfField, EffectComposer, N8AO, SSAO } from "@react-three/postprocessing";
 
 export default function Effects() {
     return <EffectComposer>
-        <DepthOfField bokehScale={10} />
+        <N8AO color="#BFC92F" aoRadius={2} intensity={1} />
+        <SSAO />
     </EffectComposer>
 }
