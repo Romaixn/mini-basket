@@ -9,6 +9,7 @@ import Lights from "./Lights"
 import Level from "./Level"
 import Confetti from "./Components/Confetti.jsx";
 import useGame from "./stores/useGame.js";
+import Effects from "./Effects"
 
 const Experience = () => {
     const { perfVisible, debugPhysics } = useControls('debug', {
@@ -44,6 +45,7 @@ const Experience = () => {
 
         <Environment preset="city" />
         <Lights />
+        <Effects />
 
         <PresentationControls
             global
